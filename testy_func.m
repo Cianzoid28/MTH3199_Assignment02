@@ -1,0 +1,198 @@
+function testy_func
+%initialize leg_params structure
+leg_params = struct();
+%number of vertices in linkage
+leg_params.num_vertices = 7;
+%number of links in linkage
+leg_params.num_linkages = 10;
+%matrix relating links to vertices
+leg_params.link_to_vertex_list = ...
+[ 1, 3;... %link 1 adjacency
+3, 4;... %link 2 adjacency
+2, 3;... %link 3 adjacency
+2, 4;... %link 4 adjacency
+4, 5;... %link 5 adjacency
+2, 6;... %link 6 adjacency
+1, 6;... %link 7 adjacency
+5, 6;... %link 8 adjacency
+5, 7;... %link 9 adjacency
+6, 7 ... %link 10 adjacency
+];
+
+vertex_coords = [...
+[ 0; 50];... %vertex 1 guess
+[ -50; 0];... %vertex 2 guess
+[ -50; 50];... %vertex 3 guess
+[-100; 0];... %vertex 4 guess
+[-100; -50];... %vertex 5 guess
+[ -50; -50];... %vertex 6 guess
+[ -50; -100]... %vertex 7 guess
+];
+
+%list of lengths for each link
+%in the leg mechanism
+leg_params.link_lengths = ...
+[ 50.0,... %link 1 length
+55.8,... %link 2 length
+41.5,... %link 3 length
+40.1,... %link 4 length
+39.4,... %link 5 length
+39.3,... %link 6 length
+61.9,... %link 7 length
+36.7,... %link 8 length
+65.7,... %link 9 length
+49.0 ... %link 10 length
+];
+
+meow = link_length_error_func(vertex_coords, leg_params);
+disp(meow)
+end
+
+
+
+
+%Error function that encodes the link length constraints
+%INPUTS:
+%vertex_coords: a column vector containing the (x,y) coordinates of every vertex
+% in the linkage. There are two ways that I would recommend stacking
+% the coordinates. You could alternate between x and y coordinates:
+% i.e. vertex_coords = [x1;y1;x2;y2;...;xn;y_n], or alternatively
+% you could do all the x's first followed by all of the y's
+% i.e. vertex_coords = [x1;x2;...xn;y1;y2;...;yn]. You could also do
+% something else entirely, the choice is up to you.
+%leg_params: a struct containing the parameters that describe the linkage
+% importantly, leg_params.link_lengths is a list of linakge lengths
+% and leg_params.link_to_vertex_list is a two column matrix where
+% leg_params.link_to_vertex_list(i,1) and
+% leg_params.link_to_vertex_list(i,2) are the pair of vertices connected
+% by the ith link in the mechanism
+%OUTPUTS:
+%length_errors: a column vector describing the current distance error of the ith
+% link specifically, length_errors(i) = (xb-xa)ˆ2 + (yb-ya)ˆ2 - d_iˆ2
+% where (xa,ya) and (xb,yb) are the coordinates of the vertices that
+% are connected by the ith link, and d_i is the length of the ith link
+function length_errors = link_length_error_func(vertex_coords, leg_params)
+
+num_links = size(leg_params.link_to_vertex_list, 1);
+length_errors = zeros(num_links, 1);
+
+    for i = 1:num_links
+    vertexA = vertex_coords(leg_params.link_to_vertex_list(i, 1), :);
+    vertexB = vertex_coords(leg_params.link_to_vertex_list(i, 2), :);
+    d = leg_params.link_lengths(i);
+    length_errors(i) = norm(vertexB - vertexA)^2 - d^2;
+
+    end
+end
+
+
+% %% 
+% 
+% 
+% for n = 1:length(x) % Loop for each value of vector x
+%         e_n(n) = 1; % Makes standard basis vector
+% 
+%         % The following code is derived from the numerical diffrentiation
+%         % function for the approximate derivative where: 
+% 
+%         f_left = fun(x - e_n*delta_x); % is the left part of the numerator of the function
+%         f_right = fun(x + e_n*delta_x); % is the right part of the numeration of the function
+%         J(:,n) = (f_right - f_left)/(2*delta_x); % the function itself for deriving the approximate derivative
+% 
+%         e_n(n) = 0; % Resetting to 0 so that the vector does not become all ones
+% 
+%     end
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% The code for f1(V ) = M is provided below:
+% %Converts from the column vector form of the coordinates to a
+% %friendlier matrix form
+% %INPUTS:
+% %coords_in = [x1;y1;x2;y2;...;xn;yn] (2n x 1 column vector)
+% %OUTPUTS:
+% %coords_out = [x1,y1;x2,y2;...;xn,yn] (n x 2 matrix)
+% function coords_out = column_to_matrix(coords_in)
+% num_coords = length(coords_in);
+% coords_out = [coords_in(1:2:(num_coords-1)),coords_in(2:2:num_coords)];
+% end
+% and the code for f2(M ) = V is provided below:
+% %Converts from the matrix form of the coordinates back to the
+% %original column vector form
+% %INPUTS:
+% %coords_in = [x1,y1;x2,y2;...;xn,yn] (n x 2 matrix)
+% %OUTPUTS:
+% %coords_out = [x1;y1;x2;y2;...;xn;yn] (2n x 1 column vector)
+% function coords_out = matrix_to_column(coords_in)
+% num_coords = 2*size(coords_in,1);
+% coords_out = zeros(num_coords,1);
+% coords_out(1:2:(num_coords-1)) = coords_in(:,1);
+% coords_out(2:2:num_coords) = coords_in(:,2);
+% end
+% 
+% 
+% %length of crank shaft
+% leg_params.crank_length = 15.0;
+% %fixed position coords of vertex 0
+% leg_params.vertex_pos0 = [0;0];
+% %fixed position coords of vertex 2
+% leg_params.vertex_pos2 = [-38.0;-7.8];
+% 
+% 
+% 
+% %Error function that encodes the fixed vertex constraints
+% %INPUTS:
+% %vertex_coords: a column vector containing the (x,y) coordinates of every vertex
+% % same input as link_length_error_func
+% %leg_params: a struct containing the parameters that describe the linkage
+% % importantly, leg_params.crank_length is the length of the crank
+% % and leg_params.vertex_pos0 and leg_params.vertex_pos2 are the
+% % fixed positions of the crank rotation center and vertex 2.
+% %theta: the current angle of the crank
+% %OUTPUTS:
+% %coord_errors: a column vector of height four corresponding to the differences
+% % between the current values of (x1,y1),(x2,y2) and
+% % the fixed values that they should be
+% function coord_errors = fixed_coord_error_func(vertex_coords, leg_params, theta)
+% %your code here
+% end
+% 
+% 
+% 
+% %Error function that encodes all necessary linkage constraints
+% %INPUTS:
+% %vertex_coords: a column vector containing the (x,y) coordinates of every vertex
+% %leg_params: a struct containing the parameters that describe the linkage
+% %theta: the current angle of the crank
+% %OUTPUTS:
+% %error_vec: a vector describing each constraint on the linkage
+% % when error_vec is all zeros, the constraints are satisfied
+% function error_vec = linkage_error_func(vertex_coords, leg_params, theta)
+% distance_errors = link_length_error_func(vertex_coords, leg_params);
+% coord_errors = fixed_coord_error_func(vertex_coords, leg_params, theta);
+% error_vec = [distance_errors;coord_errors];
+% end
+% 
+% 
+% 
+% %Computes the vertex coordinates that describe a legal linkage configuration
+% %INPUTS:
+% %vertex_coords_guess: a column vector containing the (x,y) coordinates of every vertex
+% % these coords are just a GUESS! It's used to seed Newton's method
+% %leg_params: a struct containing the parameters that describe the linkage
+% %theta: the desired angle of the crank
+% %OUTPUTS:
+% %vertex_coords_root: a column vector containing the (x,y) coordinates of every vertex
+% % these coords satisfy all the kinematic constraints!
+% function vertex_coords_root = compute_coords(vertex_coords_guess, leg_params, theta)
+% %your code here
+% end
