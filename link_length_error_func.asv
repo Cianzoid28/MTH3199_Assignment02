@@ -9,12 +9,13 @@ function length_errors = link_length_error_func(vertex_coords, leg_params)
         
         %Get coords and link length
         x1 = vertex_coords(2*index_1 - 1);
-        y1 = vertex_coords(2*index_1);
+        y1 = vertex_coords(2*index1);
         x2 = vertex_coords(2*index_2 - 1);
-        y2 = vertex_coords(2*index_2);
+        y2 = vertex_coords(2*index2);
         d = leg_params.link_lengths(i);
 
         %Find error
-        length_errors(i) = (x2-x1)^2 + (y2-y1)^2 - d^2;
+        length_errors(i) = (x2-x1)^2 + (y2-y1)
+
     end
 end
