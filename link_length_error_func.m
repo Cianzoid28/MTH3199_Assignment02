@@ -7,7 +7,7 @@ length_errors = zeros(num_links, 1);
     vertexA = vertex_coords(leg_params.link_to_vertex_list(i, 1), :);
     vertexB = vertex_coords(leg_params.link_to_vertex_list(i, 2), :);
     d = leg_params.link_lengths(i);
-    length_errors(i) = norm(vertexB - vertexA)^2 - d^2;
+    length_errors(i) = (vertexB - vertexA)^2 - d^2;
 
     end
 end

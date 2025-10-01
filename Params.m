@@ -37,6 +37,16 @@ leg_params.link_lengths = ...
 
 
 
+%length of crank shaft
+leg_params.crank_length = 15.0;
+%fixed position coords of vertex 0
+leg_params.vertex_pos0 = [0;0];
+%fixed position coords of vertex 2
+leg_params.vertex_pos2 = [-38.0;-7.8];
+
+
+
+
 
 
 

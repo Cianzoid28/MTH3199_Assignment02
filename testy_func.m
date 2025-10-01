@@ -20,14 +20,13 @@ leg_params.link_to_vertex_list = ...
 ];
 
 vertex_coords = [...
-[ 0; 50];... %vertex 1 guess
-[ -50; 0];... %vertex 2 guess
-[ -50; 50];... %vertex 3 guess
-[-100; 0];... %vertex 4 guess
-[-100; -50];... %vertex 5 guess
-[ -50; -50];... %vertex 6 guess
-[ -50; -100]... %vertex 7 guess
-];
+ 0; 50;... %vertex 1 guess
+-50; 0;... %vertex 2 guess
+-50; 50;... %vertex 3 guess
+-100; 0;... %vertex 4 guess
+-100; -50;... %vertex 5 guess
+-50; -50;... %vertex 6 guess
+-50; -100]; %vertex 7 guess
 
 %list of lengths for each link
 %in the leg mechanism
@@ -74,67 +73,18 @@ end
 
 
 
-% %% 
-% 
-% 
-% for n = 1:length(x) % Loop for each value of vector x
-%         e_n(n) = 1; % Makes standard basis vector
-% 
-%         % The following code is derived from the numerical diffrentiation
-%         % function for the approximate derivative where: 
-% 
-%         f_left = fun(x - e_n*delta_x); % is the left part of the numerator of the function
-%         f_right = fun(x + e_n*delta_x); % is the right part of the numeration of the function
-%         J(:,n) = (f_right - f_left)/(2*delta_x); % the function itself for deriving the approximate derivative
-% 
-%         e_n(n) = 0; % Resetting to 0 so that the vector does not become all ones
-% 
-%     end
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% The code for f1(V ) = M is provided below:
-% %Converts from the column vector form of the coordinates to a
-% %friendlier matrix form
-% %INPUTS:
-% %coords_in = [x1;y1;x2;y2;...;xn;yn] (2n x 1 column vector)
-% %OUTPUTS:
-% %coords_out = [x1,y1;x2,y2;...;xn,yn] (n x 2 matrix)
-% function coords_out = column_to_matrix(coords_in)
-% num_coords = length(coords_in);
-% coords_out = [coords_in(1:2:(num_coords-1)),coords_in(2:2:num_coords)];
-% end
-% and the code for f2(M ) = V is provided below:
-% %Converts from the matrix form of the coordinates back to the
-% %original column vector form
-% %INPUTS:
-% %coords_in = [x1,y1;x2,y2;...;xn,yn] (n x 2 matrix)
-% %OUTPUTS:
-% %coords_out = [x1;y1;x2;y2;...;xn;yn] (2n x 1 column vector)
-% function coords_out = matrix_to_column(coords_in)
-% num_coords = 2*size(coords_in,1);
-% coords_out = zeros(num_coords,1);
-% coords_out(1:2:(num_coords-1)) = coords_in(:,1);
-% coords_out(2:2:num_coords) = coords_in(:,2);
-% end
-% 
-% 
-% %length of crank shaft
-% leg_params.crank_length = 15.0;
-% %fixed position coords of vertex 0
-% leg_params.vertex_pos0 = [0;0];
-% %fixed position coords of vertex 2
-% leg_params.vertex_pos2 = [-38.0;-7.8];
-% 
+
+
+
+
+
+%length of crank shaft
+leg_params.crank_length = 15.0;
+%fixed position coords of vertex 0
+leg_params.vertex_pos0 = [0;0];
+%fixed position coords of vertex 2
+leg_params.vertex_pos2 = [-38.0;-7.8];
+
 % 
 % 
 % %Error function that encodes the fixed vertex constraints
