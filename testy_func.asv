@@ -71,7 +71,19 @@ end
 % link specifically, length_errors(i) = (xb-xa)ˆ2 + (yb-ya)ˆ2 - d_iˆ2
 % where (xa,ya) and (xb,yb) are the coordinates of the vertices that
 % are connected by the ith link, and d_i is the length of the ith link
+function length_errors = link_length_error_func(vertex_coords, leg_params)
 
+num_links = size(leg_params.link_to_vertex_list, 1);
+length_errors = zeros(num_links, 1);
+
+    for i = 1:num_links
+    vertexA = vertex_coords(leg_params.link_to_vertex_list(i, 1), :);
+    vertexB = vertex_coords(leg_params.link_to_vertex_list(i, 2), :);
+    d = leg_params.link_lengths(i);
+    length_errors(i) = norm(vertexB - vertexA)^2 - d^2;
+
+    end
+end
 
 
 % %% 
