@@ -49,13 +49,24 @@ leg_params.link_lengths = ...
 49.0 ... %link 10 length
 ];
 
-link_length_error_func(vertex_coords, leg_params)
+link_length_error_func(vertex_coords, leg_params);
 theta = 0;
 
-coord_errors = fixed_coord_error_func(vertex_coords, leg_params, theta)
+coord_errors = linkage_error_func(vertex_coords, leg_params, theta);
+length(coord_errors);
 
-
-
+yurr = compute_coords(vertex_coords, leg_params, theta)
+mreowow = column_to_matrix(yurr)
+plot(mreowow(:,1), mreowow(:,2), 'o')
+xlim([-120,20])
+figure
+thetas = linspace(0,2*pi, 100);
+for i = 1:100
+    yurr = compute_coords(vertex_coords, leg_params, thetas(i));
+    mreowow = column_to_matrix(yurr);
+    plot(mreowow(:,1), mreowow(:,2), '.')
+    hold on;
+end
 
 
 

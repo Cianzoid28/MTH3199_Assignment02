@@ -26,8 +26,8 @@ leg_params.vertex_pos0 = [0;0];
 leg_params.vertex_pos2 = [-38.0;-7.8];
 
 vertex_coords = [...
- 0; 50;... %vertex 1 guess
--50; 0;... %vertex 2 guess
+ 15; 0;... %vertex 1 guess
+-38; -7.8;... %vertex 2 guess
 -50; 50;... %vertex 3 guess
 -100; 0;... %vertex 4 guess
 -100; -50;... %vertex 5 guess
@@ -49,13 +49,23 @@ leg_params.link_lengths = ...
 49.0 ... %link 10 length
 ];
 
-link_length_error_func(vertex_coords, leg_params)
+link_length_error_func(vertex_coords, leg_params);
 theta = 0;
 
-coord_errors = fixed_coord_error_func(vertex_coords, leg_params, theta)
+coord_errors = linkage_error_func(vertex_coords, leg_params, theta);
+length(coord_errors);
 
+yurr = compute_coords(vertex_coords, leg_params, theta)
+mreowow = column_to_matrix(yurr)
+plot(mreowow(:,1), mreowow(:,2), 'o')
 
+thetas = linspace(0,2*pi, 100);
+for i = 1:100
+    yurr = compute_coords(vertex_coords, leg_params, thetas(i))
+    mreowow = column_to_matrix(yurr)
+    plot(mreowow(:,1), mreowow(:,2), 'o')
 
+end
 
 
 
