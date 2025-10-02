@@ -64,7 +64,7 @@ thetas = linspace(0,2*pi, 100);
 for i = 1:100
     yurr = compute_coords(vertex_coords, leg_params, thetas(i));
     mreowow = column_to_matrix(yurr);
-    plot(mreowow(:,1), mreowow(:,2), '.')
+    plot(mreowow(end,1), mreowow(end,2), '.')
     hold on;
 end
 
