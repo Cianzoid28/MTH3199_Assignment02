@@ -50,8 +50,8 @@ function strandbeest_animation()
     65.7,... %link 9 length
     49.0 ... %link 10 length
     ];
-plot
-   hold on;
+
+    hold on;
     axis([-120,20,-100,50]);
     
     num_vertices = size(vertex_coords,1);
@@ -78,10 +78,10 @@ plot
     x_path = []; 
     y_path = [];
     
-    for t = 0:0.002:13
+    for t = 0:0.002:25
         % compute vertex positions
-        linkage_point_column   = compute_coords(vertex_coords, leg_params, t);
-        linkage_points = column_to_matrix(linkage_point_column);
+        link_points_column   = compute_coords(vertex_coords, leg_params, t);
+        linkage_points = column_to_matrix(link_points_column);
         
         x_plot = linkage_points(:,1);
         y_plot = linkage_points(:,2);
