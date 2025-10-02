@@ -68,6 +68,7 @@ for i = 1:100
     hold on;
 end
 
+leg_drawing = initialize_leg_drawing(leg_params);
 
 
 %Error function that encodes the link length constraints
