@@ -54,8 +54,19 @@ function strandbeest_animation()
     hold on;
     axis([-120,20,-100,50]);
     
+    %prepare for for loop
     num_vertices = size(vertex_coords,1);
     num_links    = size(leg_params.link_to_vertex_list,1);
+
+    %setup lists for leg velocity tracking
+
+    x7_CV = [];
+    y7_CV = [];
+    x7_FD = [];
+    y7_FD = [];
+    x7_pos_list = [];
+    y7_pos_list = [];
+    thetas = [];
     
     % Fixed reference point
     plot(0,0,'ro','MarkerFaceColor','r','MarkerSize',8);
@@ -77,10 +88,18 @@ function strandbeest_animation()
     path_plot = plot(nan,nan,'b-','LineWidth',1.5); % green trajectory
     x_path = []; 
     y_path = [];
+
+    %tangent plot
+    tangent_plot = plot(0,0,'g');
+
+    %graph setup
+    title("StrandBeest")
+    xlabel('X Position')
+    ylabel('Y Position')
     
-    for t = 0:0.002:25
+    for theta = 0:0.002:12
         % compute vertex positions
-        link_points_column   = compute_coords(vertex_coords, leg_params, t);
+        link_points_column   = compute_coords(vertex_coords, leg_params, theta);
         linkage_points = column_to_matrix(link_points_column);
         
         x_plot = linkage_points(:,1);
@@ -103,7 +122,47 @@ function strandbeest_animation()
         y_path(end+1) = linkage_points(end, 2);
         set(path_plot,'XData',x_path,'YData',y_path);
 
+        %velocities
+        dvdtheta_CV = compute_velocities(link_points_column, leg_params, theta);
+        dvdtheta_FD = finite_differences(link_points_column, leg_params, theta);
+        if theta < 2*pi
+            x7_pos_list(end+1) = link_points_column(13);
+            y7_pos_list(end+1) = link_points_column(14);
+            thetas(end+1) = theta;
+
+            x7_CV(end+1) = dvdtheta_CV(13);
+            y7_CV(end+1) = dvdtheta_CV(14);
+            x7_FD(end+1) = dvdtheta_FD(13);
+            y7_FD(end+1) = dvdtheta_FD(14);
+        end
+
+        x_tan = link_points_column(13) + [0,dvdtheta_CV(13)];
+        y_tan = link_points_column(14) + [0,dvdtheta_CV(14)];
+        set(tangent_plot, 'xdata', x_tan, 'ydata', y_tan)
     
     drawnow;
     end
+
+
+    figure
+    hold off
+    subplot(2,1,1)
+    plot(thetas,x7_CV, "b")
+    hold on
+    plot(thetas,x7_FD, "r--")
+    legend("Compute Velocities (Linear Algebra)", "Finite Differences")
+    xlabel("Theta")
+    ylabel("X Tip Velocity")
+    title("X Velocity vs Theta")
+
+    subplot(2,1,2)
+    hold off
+    plot(thetas, y7_CV, 'b');
+    hold on
+    plot(thetas,y7_FD, "r--");
+    legend("Compute Velocities (Linear Algebra)", "Finite Differences")
+    xlabel("Theta")
+    ylabel("Y Tip Velocity")
+    title("Y Velocity vs Theta")
+
 end

@@ -51,11 +51,22 @@ function strandbeest_animation()
     49.0 ... %link 10 length
     ];
 
-   hold on;
-    axis([-120,20,-100,60]);
+    hold on;
+    axis([-120,20,-100,50]);
     
+    %prepare for for loop
     num_vertices = size(vertex_coords,1);
     num_links    = size(leg_params.link_to_vertex_list,1);
+
+    %setup lists for leg velocity tracking
+
+    x7_CV = [];
+    y7_CV = [];
+    x7_FD = [];
+    y7_FD = [];
+    x7_pos_list = [];
+    y7_pos_list = [];
+    thetas = [];
     
     % Fixed reference point
     plot(0,0,'ro','MarkerFaceColor','r','MarkerSize',8);
@@ -73,17 +84,26 @@ function strandbeest_animation()
     %dotted line for drive
     origin_link = plot([0 0],[0 0],'r:','LineWidth',1.5);
     
-    path_plot = plot(nan,nan,'g-','LineWidth',1.5); % green trajectory
-x_path = []; 
-y_path = [];
+    %path of leg
+    path_plot = plot(nan,nan,'b-','LineWidth',1.5); % green trajectory
+    x_path = []; 
+    y_path = [];
+
+    %tangent plot
+    tangent_plot = plot(0,0,'g');
+
+    %graph setup
+    title("StrandBeest")
+    xlabel('X Position')
+    ylabel('Y Position')
     
-    for t = 0:0.002:13
+    for theta = 0:0.002:25
         % compute vertex positions
-        yurr   = compute_coords(vertex_coords, leg_params, t);
-        mreowow = column_to_matrix(yurr);
+        link_points_column   = compute_coords(vertex_coords, leg_params, theta);
+        linkage_points = column_to_matrix(link_points_column);
         
-        x_plot = mreowow(:,1);
-        y_plot = mreowow(:,2);
+        x_plot = linkage_points(:,1);
+        y_plot = linkage_points(:,2);
         
         % update vertices
         set(square_plot,'XData',x_plot,'YData',y_plot);
@@ -92,13 +112,28 @@ y_path = [];
         for i = 1:num_links
             v1 = leg_params.link_to_vertex_list(i,1);
             v2 = leg_params.link_to_vertex_list(i,2);
-            set(link_plots(i), 'XData', [x_plot(v1) x_plot(v2)], ...
-                               'YData', [y_plot(v1) y_plot(v2)]);
+            set(link_plots(i), 'XData', [x_plot(v1) x_plot(v2)], 'YData', [y_plot(v1) y_plot(v2)]);
         end
-        % Update dotted line from origin (0,0) to vertex 1
-    set(origin_link,'XData',[0, x_plot(1)], 'YData',[0, y_plot(1)]);
+        % Update dotted line from origin (0,0) to vertex 1 (crank arm)
+        set(origin_link,'XData',[0, x_plot(1)], 'YData',[0, y_plot(1)]);
+        
+        %Path tracking
+        x_path(end+1) = linkage_points(end, 1);
+        y_path(end+1) = linkage_points(end, 2);
+        set(path_plot,'XData',x_path,'YData',y_path);
+
+        %velocities
+        dvdtheta_CV = compute_velocities(vertex_coords, leg_params, theta);
+        dvdtheta_FD = finite_differences(vertex_coords, leg_params, theta);
+        if theta < 2*pi
+            x7_pos_list
+        end
 
     
     drawnow;
     end
+
+
+    figure
+
 end
